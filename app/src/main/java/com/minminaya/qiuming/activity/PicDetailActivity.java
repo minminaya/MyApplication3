@@ -34,6 +34,7 @@ public class PicDetailActivity extends AppCompatActivity {
     @Bind(R.id.viewpager)
     ViewPager viewpager;
     ArrayList<View> views;
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,8 +46,8 @@ public class PicDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         final MeizituModel meizituModel = (MeizituModel) bundle.getSerializable("PPO");
 
-        Log.e("PicDetailActivity:",""+ meizituModel.getWebTitle());
-        Log.e("PicDetailActivity:",""+ meizituModel.getPicInfos().get(0).getPicUrl());
+        Log.e("PicDetailActivity:", "" + meizituModel.getWebTitle());
+        Log.e("PicDetailActivity:", "" + meizituModel.getPicInfos().get(0).getPicUrl());
 
         views = new ArrayList<View>();
         for (int i = 0; i < meizituModel.getPicInfos().size(); i++) {
@@ -55,6 +56,7 @@ public class PicDetailActivity extends AppCompatActivity {
             Glide.with(App.getINSTANCE()).load(meizituModel.getPicInfos().get(i).getPicUrl()).into(ph);
             views.add(ph);
         }
+        Toast.makeText(App.getINSTANCE(), "右滑", Toast.LENGTH_SHORT).show();
         viewpager.setAdapter(pagerAdapter);
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -64,7 +66,7 @@ public class PicDetailActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position == meizituModel.getPicInfos().size() - 1){
+                if (position == meizituModel.getPicInfos().size() - 1) {
                     Toast.makeText(App.getINSTANCE(), "End", Toast.LENGTH_SHORT).show();
                 }
             }

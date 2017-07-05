@@ -57,6 +57,7 @@ public class MeiziTuRecyclerViewAdapter extends RecyclerView.Adapter<MeiziTuRecy
                     Intent intent = new Intent(App.getINSTANCE(), PicDetailActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("PPO", meizituModels.get(position));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtras(bundle);
 
                     App.getINSTANCE().startActivity(intent);
