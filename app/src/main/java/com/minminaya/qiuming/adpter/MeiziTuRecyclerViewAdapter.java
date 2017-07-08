@@ -50,10 +50,25 @@ public class MeiziTuRecyclerViewAdapter extends RecyclerView.Adapter<MeiziTuRecy
             Glide.with(App.getINSTANCE()).load(meizituModels.get(position).getPicInfos().get(0).getPicUrl()).into(holder.img);
             holder.tv.setText(meizituModels.get(position).getWebTitle());
 
-            holder.img.setOnClickListener(new View.OnClickListener() {
+
+//            holder.img.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    Intent intent = new Intent(App.getINSTANCE(), PicDetailActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("PPO", meizituModels.get(position));
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    intent.putExtras(bundle);
+//
+//                    App.getINSTANCE().startActivity(intent);
+//
+//                }
+//            });
+
+            View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Intent intent = new Intent(App.getINSTANCE(), PicDetailActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("PPO", meizituModels.get(position));
@@ -63,7 +78,10 @@ public class MeiziTuRecyclerViewAdapter extends RecyclerView.Adapter<MeiziTuRecy
                     App.getINSTANCE().startActivity(intent);
 
                 }
-            });
+            };
+
+            holder.img.setOnClickListener(onClickListener);
+            holder.tv.setOnClickListener(onClickListener);
         }
     }
 

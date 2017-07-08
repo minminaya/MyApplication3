@@ -1,16 +1,16 @@
 package com.minminaya.qiuming.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -18,11 +18,14 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.minminaya.qiuming.App;
 import com.minminaya.qiuming.R;
 import com.minminaya.qiuming.model.MeizituModel;
+import com.minminaya.qiuming.util.DownLoadImage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Niwa on 2017/7/5.
@@ -34,7 +37,10 @@ public class PicDetailActivity extends AppCompatActivity {
     @Bind(R.id.viewpager)
     ViewPager viewpager;
     ArrayList<View> views;
+    @Bind(R.id.btn_download)
+    Button btnDownload;
     private boolean isFirst = true;
+    MeizituModel meizituModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class PicDetailActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //获取数据
         Bundle bundle = getIntent().getExtras();
-        final MeizituModel meizituModel = (MeizituModel) bundle.getSerializable("PPO");
+        meizituModel = (MeizituModel) bundle.getSerializable("PPO");
 
         Log.e("PicDetailActivity:", "" + meizituModel.getWebTitle());
         Log.e("PicDetailActivity:", "" + meizituModel.getPicInfos().get(0).getPicUrl());
@@ -78,7 +84,7 @@ public class PicDetailActivity extends AppCompatActivity {
         });
     }
 
-
+    int currentPosition;
     PagerAdapter pagerAdapter = new PagerAdapter() {
         @Override
         public int getCount() {
@@ -101,8 +107,27 @@ public class PicDetailActivity extends AppCompatActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             //返回一个对象，这个对象表明了PagerAdapter适配器选择哪个对象放在当前的ViewPager中
             container.addView(views.get(position));
+            currentPosition = position;
             return views.get(position);
         }
 
     };
+
+    @OnClick(R.id.btn_download)
+    public void onViewClicked() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DownLoadImage.downLoad(meizituModel.getPicInfos().get(currentPosition - 1).getPicUrl(), "--" + currentPosition + "--" + meizituModel.getWebTitle() + ".jpg", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/pic");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        Toast.makeText(this, "图片保存在外置存储Picture文件夹...", Toast.LENGTH_SHORT).show();
+    }
+
+
 }

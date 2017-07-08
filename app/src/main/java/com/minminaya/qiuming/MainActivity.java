@@ -1,7 +1,9 @@
 package com.minminaya.qiuming;
 
 import android.animation.ObjectAnimator;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,11 +17,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.minminaya.qiuming.adpter.MeiziTuRecyclerViewAdapter;
 import com.minminaya.qiuming.http.NetWork;
 import com.minminaya.qiuming.model.MeizituModel;
+import com.minminaya.qiuming.util.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +99,8 @@ public class MainActivity extends AppCompatActivity
                 recyclerView.loadMoreComplete();
             }
         });
+        PermissionUtils.checkPermission(this);
+
     }
 
     @Override
@@ -186,5 +192,25 @@ public class MainActivity extends AppCompatActivity
         anim1.start();
         anim2.start();
         loadPic(12, 1);
+    }
+
+
+
+    //获取到权限回调方法
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[]permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //权限够了处理逻辑
+                    Log.d("r", "权限够了,逻辑");
+                } else {
+                    Toast.makeText(this, "权限不够，程序将退出", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
